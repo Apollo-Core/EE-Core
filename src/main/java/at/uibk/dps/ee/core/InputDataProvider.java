@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 
 /**
  * The {@link InputDataProvider} provides the input data for the enactment of
- * the workflow.
+ * the workflow (used for single runs).
  * 
  * @author Fedor Smirnov
  *
