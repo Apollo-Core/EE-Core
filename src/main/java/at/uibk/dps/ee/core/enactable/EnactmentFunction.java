@@ -1,6 +1,9 @@
 package at.uibk.dps.ee.core.enactable;
 
+import java.util.Set;
 import com.google.gson.JsonObject;
+
+import java.util.AbstractMap.SimpleEntry;
 
 import at.uibk.dps.ee.core.exception.StopException;
 
@@ -23,16 +26,37 @@ public interface EnactmentFunction {
   JsonObject processInput(JsonObject input) throws StopException;
 
   /**
-   * Returns a string identifying the function.
+   * Returns the type ID of the function. The type ID describes the purpose of the
+   * function within a workflow, i.e., the way in which it processes input data
+   * (Example type ID: Addition).
    * 
-   * @return the identifier of the function.
+   * @return the type ID of the function.
    */
-  String getId();
+  String getTypeId();
 
   /**
-   * Returns a string identifying the type of the function.
+   * Returns a string indicating the enactment mode (e.g., local enactment or
+   * enactment as a serverless function).
    * 
-   * @return a string identifying the type of the function
+   * @return a string indicating the enactment mode of the function
    */
-  String getType();
+  String getEnactmentMode();
+
+  /**
+   * Returns a string uniquely identifying the code base used for the
+   * implementation of the function.
+   * 
+   * @return a string uniquely identifying the code base used for the
+   *         implementation of the function
+   */
+  String getImplementationId();
+
+  /**
+   * Generic interface for any additional attributes used to describe the
+   * function.
+   * 
+   * @return a set of string-string key value pairs describing additional function
+   *         attributes
+   */
+  Set<SimpleEntry<String, String>> getAdditionalAttributes();
 }

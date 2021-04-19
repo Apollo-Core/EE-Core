@@ -30,11 +30,14 @@ public class EnactmentFunctionDecoratorTest {
 
   @Test
   public void test() {
-    String id = "id";
-    String type = "type";
+    String typeId = "addition";
+    String enactmentMode = "local";
+    String implementationId = "nativeJava";
+
     EnactmentFunction mockOriginal = mock(EnactmentFunction.class);
-    when(mockOriginal.getId()).thenReturn(id);
-    when(mockOriginal.getType()).thenReturn(type);
+    when(mockOriginal.getTypeId()).thenReturn(typeId);
+    when(mockOriginal.getEnactmentMode()).thenReturn(enactmentMode);
+    when(mockOriginal.getImplementationId()).thenReturn(implementationId);
     JsonObject input = new JsonObject();
     JsonObject result = new JsonObject();
     try {
@@ -44,8 +47,9 @@ public class EnactmentFunctionDecoratorTest {
     }
     TestedDecorator tested = new TestedDecorator(mockOriginal);
     TestedDecorator spy = spy(tested);
-    assertEquals(id, tested.getId());
-    assertEquals(type, tested.getType());
+    assertEquals(typeId, tested.getTypeId());
+    assertEquals(enactmentMode, tested.getEnactmentMode());
+    assertEquals(implementationId, tested.getImplementationId());
     try {
       assertEquals(result, spy.processInput(input));
       verify(spy).preprocess(input);

@@ -1,5 +1,7 @@
 package at.uibk.dps.ee.core.enactable;
 
+import java.util.Set;
+import java.util.AbstractMap.SimpleEntry;
 import com.google.gson.JsonObject;
 import at.uibk.dps.ee.core.exception.StopException;
 
@@ -30,14 +32,24 @@ public abstract class EnactmentFunctionDecorator implements EnactmentFunction {
     return postprocess(rawResult);
   }
 
-  @Override
-  public String getId() {
-    return decoratedFunction.getId();
+   @Override
+  public String getEnactmentMode() {
+    return decoratedFunction.getEnactmentMode();
   }
-
-  @Override
-  public String getType() {
-    return decoratedFunction.getType();
+   
+   @Override
+  public String getImplementationId() {
+    return decoratedFunction.getImplementationId();
+  }
+   
+   @Override
+  public String getTypeId() {
+    return decoratedFunction.getTypeId();
+  }
+   
+   @Override
+  public Set<SimpleEntry<String, String>> getAdditionalAttributes() {
+    return decoratedFunction.getAdditionalAttributes();
   }
 
   /**
