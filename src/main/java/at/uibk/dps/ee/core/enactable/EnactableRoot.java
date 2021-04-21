@@ -32,5 +32,9 @@ public class EnactableRoot extends Enactable {
    */
   public void setInput(final JsonObject wfInput) {
     this.jsonInput = wfInput;
+    if (getState().equals(State.FINISHED)) {
+      // repeated runs with different inputs => reset to Launchable
+      setState(State.LAUNCHABLE);
+    }
   }
 }
