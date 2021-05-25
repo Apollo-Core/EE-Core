@@ -2,7 +2,8 @@ package at.uibk.dps.ee.core.enactable;
 
 /**
  * Parent class for the classes used to do the actual wrapping (necessary
- * because of the injection logic).
+ * because of the injection logic). Note: Make sure that each class extending
+ * this one is annotated as a singleton.
  * 
  * @author Fedor Smirnov
  */
