@@ -10,7 +10,7 @@ import com.google.gson.JsonObject;
 public interface ContainerManager {
 
   /**
-   * Inits the given image during the configuration of Apollo.
+   * Initializes the given image during the configuration of Apollo.
    * 
    * @param imageName
    */
