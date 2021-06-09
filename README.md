@@ -4,12 +4,25 @@
 [![](https://jitpack.io/v/Apollo-Core/EE-Core.svg)](https://jitpack.io/#Apollo-Core/EE-Core)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-# Apollo-Core
+# EE-Core
+Project defining the core interfaces of the Apollo platform which are used for the communication among the other projects.
 
-## Enactment Engine
+## Relations to other parts of Apollo-Core
 
-### CORE
+### Depends On
++ --
 
-#### <ins>**Short Description**</ins> 
+### Used By
++ EE-Guice
++ EE-Model
++ EE-IO
++ EE-Enactables
++ EE-Control
++ EE-Docker
++ EE-Visualization
++ EE-Demo
++ EE-Deploy
 
-The **EE-Core** repository contains the classes and interfaces describing the fundamental components and behavior of APOLLO's enactment engine.
+### Relevant For
++ Definition of the core functionality of the Apollo Platform
++ Definition of the main interfaces used across the other projects
