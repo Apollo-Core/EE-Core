@@ -10,19 +10,19 @@ Project defining the core interfaces of the Apollo platform which are used for t
 ## Relations to other parts of Apollo-Core
 
 ### Depends On
-+ --
+  + --
 
 ### Used By
-+ EE-Guice
-+ EE-Model
-+ EE-IO
-+ EE-Enactables
-+ EE-Control
-+ EE-Docker
-+ EE-Visualization
-+ EE-Demo
-+ EE-Deploy
+  + EE-Guice
+  + EE-Model
+  + EE-IO
+  + EE-Enactables
+  + EE-Control
+  + EE-Docker
+  + EE-Visualization
+  + EE-Demo
+  + EE-Deploy
 
 ### Relevant For
-+ Definition of the core functionality of the Apollo Platform
-+ Definition of the main interfaces used across the other projects
+  + Definition of the core functionality of the Apollo Platform
+  + Definition of the main interfaces used across the other projects

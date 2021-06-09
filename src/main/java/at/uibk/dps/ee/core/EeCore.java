@@ -46,7 +46,7 @@ public class EeCore {
    * 
    * @throws FailureException
    */
-  public JsonObject enactWorkflow(JsonObject inputData) throws FailureException {
+  public JsonObject enactWorkflow(final JsonObject inputData) throws FailureException {
     final EnactableRoot enactableRoot = enactableProvider.getEnactableApplication();
     enactableRoot.setInput(inputData);
     for (final EnactmentStateListener stateListener : stateListeners) {
