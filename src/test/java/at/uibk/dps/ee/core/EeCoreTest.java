@@ -34,14 +34,28 @@ public class EeCoreTest {
     EnactmentStateListener mockListener = mock(EnactmentStateListener.class);
     enactmentListeners.add(mockListener);
     JsonObject mockOutput = new JsonObject();
+
+    LocalResources locRes1 = mock(LocalResources.class);
+    LocalResources locRes2 = mock(LocalResources.class);
+    Set<LocalResources> locRes = new HashSet<>();
+    locRes.add(locRes1);
+    locRes.add(locRes2);
+
     try {
       when(functionMock.processInput(mockInput)).thenReturn(mockOutput);
-      EeCore tested = new EeCore(outputDataHandler, enactableProvider, enactmentListeners);
+      EeCore tested = new EeCore(outputDataHandler, enactableProvider, enactmentListeners, locRes);
       JsonObject result = tested.enactWorkflow(mockInput);
       assertEquals(mockOutput, result);
       verify(outputDataHandler).handleOutputData(mockOutput);
       verify(mockListener).enactmentStarted();
       verify(mockListener).enactmentTerminated();
+
+      tested.close();
+      verify(locRes1).init();
+      verify(locRes1).close();
+      verify(locRes2).init();
+      verify(locRes2).close();
+
     } catch (FailureException | StopException stopExc) {
       fail();
     }
@@ -58,7 +72,8 @@ public class EeCoreTest {
     when(enactableProvider.getEnactableApplication()).thenReturn(mockEnactable);
     EnactmentStateListener mockListener = mock(EnactmentStateListener.class);
     enactmentListeners.add(mockListener);
-    EeCore tested = new EeCore(outputDataHandler, enactableProvider, enactmentListeners);
+    EeCore tested =
+        new EeCore(outputDataHandler, enactableProvider, enactmentListeners, new HashSet<>());
     try {
       Mockito.doThrow(new StopException("bla")).when(functionMock).processInput(mockInput);
       tested.enactWorkflow(mockInput);
@@ -75,7 +90,7 @@ public class EeCoreTest {
     OutputDataHandler outputDataHandler = mock(OutputDataHandler.class);
     EnactableProvider wfProvider = mock(EnactableProvider.class);
     Set<EnactmentStateListener> enactmentListeners = new HashSet<>();
-    EeCore tested = new EeCore(outputDataHandler, wfProvider, enactmentListeners);
+    EeCore tested = new EeCore(outputDataHandler, wfProvider, enactmentListeners, new HashSet<>());
     assertEquals(outputDataHandler, tested.outputDataHandler);
     assertEquals(wfProvider, tested.enactableProvider);
     assertEquals(enactmentListeners, tested.stateListeners);

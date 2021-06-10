@@ -21,6 +21,7 @@ public class EeCore {
   protected final EnactableProvider enactableProvider;
 
   protected final Set<EnactmentStateListener> stateListeners;
+  protected final Set<LocalResources> localResources;
 
   /**
    * Default constructor (also the one used by Guice)
@@ -29,12 +30,17 @@ public class EeCore {
    *        the WF execution
    * @param enactableProvider provider of the WF description
    * @param stateListeners classes which react to changes of the enactment state
+   * @param localResources a set of interfaces for the access to the resources on
+   *        the current Apollo instance
    */
   public EeCore(final OutputDataHandler outputDataHandler,
-      final EnactableProvider enactableProvider, final Set<EnactmentStateListener> stateListeners) {
+      final EnactableProvider enactableProvider, final Set<EnactmentStateListener> stateListeners,
+      final Set<LocalResources> localResources) {
     this.outputDataHandler = outputDataHandler;
     this.enactableProvider = enactableProvider;
     this.stateListeners = stateListeners;
+    this.localResources = localResources;
+    localResources.forEach(locRes -> locRes.init());
   }
 
   /**
@@ -65,5 +71,12 @@ public class EeCore {
         stateListener.enactmentTerminated();
       }
     }
+  }
+
+  /**
+   * Called to clean up before terminating the current Apollo instance.
+   */
+  public void close() {
+    localResources.forEach(locRes -> locRes.close());
   }
 }
