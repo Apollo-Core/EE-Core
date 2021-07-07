@@ -13,7 +13,7 @@ import io.vertx.core.Future;
  * @author Fedor Smirnov
  *
  */
-public class EeCore extends AbstractVerticle{
+public class EeCore extends AbstractVerticle {
 
   protected final OutputDataHandler outputDataHandler;
 
@@ -32,8 +32,8 @@ public class EeCore extends AbstractVerticle{
    *        the current Apollo instance
    */
   public EeCore(final OutputDataHandler outputDataHandler,
-      final Set<EnactmentStateListener> stateListeners,
-      final Set<LocalResources> localResources, CoreFunction coreFunction) {
+      final Set<EnactmentStateListener> stateListeners, final Set<LocalResources> localResources,
+      final CoreFunction coreFunction) {
     this.outputDataHandler = outputDataHandler;
     this.stateListeners = stateListeners;
     this.localResources = localResources;
@@ -52,9 +52,9 @@ public class EeCore extends AbstractVerticle{
     for (final EnactmentStateListener stateListener : stateListeners) {
       stateListener.enactmentStarted();
     }
-    Future<JsonObject> wfCompletion = coreFunction.processInput(inputData);
-    wfCompletion.onComplete(asyncJson ->{
-      JsonObject result = asyncJson.result();
+    final Future<JsonObject> wfCompletion = coreFunction.processInput(inputData);
+    wfCompletion.onComplete(asyncJson -> {
+      final JsonObject result = asyncJson.result();
       outputDataHandler.handleOutputData(result);
       // better use event bus for this
       for (final EnactmentStateListener stateListener : stateListeners) {
