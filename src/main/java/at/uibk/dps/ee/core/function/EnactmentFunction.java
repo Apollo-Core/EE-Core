@@ -20,7 +20,7 @@ public interface EnactmentFunction {
    * Processes the input json object and returns the result of the function.
    * 
    * @param input
-   * @return the json object generated as the result of the process
+   * @return the future of the json object generated as the result of the process
    * @throws StopException exception thrown if errors occur during the processing
    */
   Future<JsonObject> processInput(JsonObject input);

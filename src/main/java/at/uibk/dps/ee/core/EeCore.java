@@ -47,8 +47,6 @@ public class EeCore extends AbstractVerticle{
    * throw {@link StopException}.
    * 
    * @param inputData the {@link JsonObject} containing input data
-   * 
-   * @throws FailureException
    */
   public Future<JsonObject> enactWorkflow(final JsonObject inputData) {
     for (final EnactmentStateListener stateListener : stateListeners) {
