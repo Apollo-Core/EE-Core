@@ -3,11 +3,9 @@ package at.uibk.dps.ee.core;
 import java.util.Set;
 
 import com.google.gson.JsonObject;
-
-import at.uibk.dps.ee.core.enactable.EnactableRoot;
-import at.uibk.dps.ee.core.enactable.EnactmentStateListener;
-import at.uibk.dps.ee.core.exception.FailureException;
-import at.uibk.dps.ee.core.exception.StopException;
+import at.uibk.dps.ee.core.function.EnactmentStateListener;
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
 
 /**
  * Core class performing the enactment.
@@ -15,13 +13,13 @@ import at.uibk.dps.ee.core.exception.StopException;
  * @author Fedor Smirnov
  *
  */
-public class EeCore {
+public class EeCore extends AbstractVerticle{
 
   protected final OutputDataHandler outputDataHandler;
-  protected final EnactableProvider enactableProvider;
 
   protected final Set<EnactmentStateListener> stateListeners;
   protected final Set<LocalResources> localResources;
+  protected final CoreFunction coreFunction;
 
   /**
    * Default constructor (also the one used by Guice)
@@ -34,12 +32,12 @@ public class EeCore {
    *        the current Apollo instance
    */
   public EeCore(final OutputDataHandler outputDataHandler,
-      final EnactableProvider enactableProvider, final Set<EnactmentStateListener> stateListeners,
-      final Set<LocalResources> localResources) {
+      final Set<EnactmentStateListener> stateListeners,
+      final Set<LocalResources> localResources, CoreFunction coreFunction) {
     this.outputDataHandler = outputDataHandler;
-    this.enactableProvider = enactableProvider;
     this.stateListeners = stateListeners;
     this.localResources = localResources;
+    this.coreFunction = coreFunction;
     localResources.forEach(locRes -> locRes.init());
   }
 
@@ -52,25 +50,20 @@ public class EeCore {
    * 
    * @throws FailureException
    */
-  public JsonObject enactWorkflow(final JsonObject inputData) throws FailureException {
-    final EnactableRoot enactableRoot = enactableProvider.getEnactableApplication();
-    enactableRoot.setInput(inputData);
+  public Future<JsonObject> enactWorkflow(final JsonObject inputData) {
     for (final EnactmentStateListener stateListener : stateListeners) {
       stateListener.enactmentStarted();
     }
-    try {
-      enactableRoot.play();
-      final JsonObject outputData = enactableRoot.getResult();
-      outputDataHandler.handleOutputData(outputData);
-      return outputData;
-    } catch (StopException stopException) {
-      // The root should never throw exceptions.
-      throw new FailureException(stopException);
-    } finally {
+    Future<JsonObject> wfCompletion = coreFunction.processInput(inputData);
+    wfCompletion.onComplete(asyncJson ->{
+      JsonObject result = asyncJson.result();
+      outputDataHandler.handleOutputData(result);
+      // better use event bus for this
       for (final EnactmentStateListener stateListener : stateListeners) {
         stateListener.enactmentTerminated();
       }
-    }
+    });
+    return wfCompletion;
   }
 
   /**

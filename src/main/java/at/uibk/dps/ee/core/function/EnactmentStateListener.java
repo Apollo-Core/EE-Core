@@ -1,4 +1,4 @@
-package at.uibk.dps.ee.core.enactable;
+package at.uibk.dps.ee.core.function;
 
 /**
  * Interface for classes which act in reaction to events on the global scale of

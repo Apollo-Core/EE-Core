@@ -1,11 +1,11 @@
-package at.uibk.dps.ee.core.enactable;
+package at.uibk.dps.ee.core.function;
 
 import java.util.Set;
 import com.google.gson.JsonObject;
 
 import java.util.AbstractMap.SimpleEntry;
 
-import at.uibk.dps.ee.core.exception.StopException;
+import io.vertx.core.Future;
 
 /**
  * The {@link EnactmentFunction} models the concrete behavior of an
@@ -23,7 +23,7 @@ public interface EnactmentFunction {
    * @return the json object generated as the result of the process
    * @throws StopException exception thrown if errors occur during the processing
    */
-  JsonObject processInput(JsonObject input) throws StopException;
+  Future<JsonObject> processInput(JsonObject input);
 
   /**
    * Returns the type ID of the function. The type ID describes the purpose of the

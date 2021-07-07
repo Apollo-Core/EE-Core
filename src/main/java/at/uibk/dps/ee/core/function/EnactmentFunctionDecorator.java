@@ -1,9 +1,9 @@
-package at.uibk.dps.ee.core.enactable;
+package at.uibk.dps.ee.core.function;
 
 import java.util.Set;
 import java.util.AbstractMap.SimpleEntry;
 import com.google.gson.JsonObject;
-import at.uibk.dps.ee.core.exception.StopException;
+import io.vertx.core.Future;
 
 /**
  * The {@link EnactmentFunctionDecorator} offers a flexible way to dynamically
@@ -26,28 +26,30 @@ public abstract class EnactmentFunctionDecorator implements EnactmentFunction {
   }
 
   @Override
-  public JsonObject processInput(final JsonObject input) throws StopException {
-    final JsonObject preprocessedInput = preprocess(input);
-    final JsonObject rawResult = decoratedFunction.processInput(preprocessedInput);
-    return postprocess(rawResult);
+  public Future<JsonObject> processInput(final JsonObject input){
+    return preprocess(input).compose(preprocessedJson -> {
+      return decoratedFunction.processInput(preprocessedJson);
+    }).compose(resultJson -> {
+      return postprocess(resultJson);
+    });
   }
 
-   @Override
+  @Override
   public String getEnactmentMode() {
     return decoratedFunction.getEnactmentMode();
   }
-   
-   @Override
+
+  @Override
   public String getImplementationId() {
     return decoratedFunction.getImplementationId();
   }
-   
-   @Override
+
+  @Override
   public String getTypeId() {
     return decoratedFunction.getTypeId();
   }
-   
-   @Override
+
+  @Override
   public Set<SimpleEntry<String, String>> getAdditionalAttributes() {
     return decoratedFunction.getAdditionalAttributes();
   }
@@ -59,7 +61,7 @@ public abstract class EnactmentFunctionDecorator implements EnactmentFunction {
    * @param input the input of the decorated function.
    * @return the input actually given to the decorated function.
    */
-  protected abstract JsonObject preprocess(JsonObject input);
+  protected abstract Future<JsonObject> preprocess(JsonObject input);
 
   /**
    * Method to define the steps which are to be taken after the processing
@@ -68,5 +70,5 @@ public abstract class EnactmentFunctionDecorator implements EnactmentFunction {
    * @param result the result of the decorated function
    * @return the result after the postprocessing
    */
-  protected abstract JsonObject postprocess(JsonObject result);
+  protected abstract Future<JsonObject> postprocess(JsonObject result);
 }

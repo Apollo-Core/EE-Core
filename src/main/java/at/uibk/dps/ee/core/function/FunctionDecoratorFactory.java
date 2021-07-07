@@ -1,4 +1,4 @@
-package at.uibk.dps.ee.core.enactable;
+package at.uibk.dps.ee.core.function;
 
 /**
  * Parent class for the classes used to do the actual wrapping (necessary

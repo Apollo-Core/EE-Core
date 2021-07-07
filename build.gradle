@@ -1,7 +1,7 @@
 buildscript {
-	repositories {
-		jcenter()
-	}
+  repositories {
+    jcenter()
+  }
 }
 
 apply plugin: 'java'
@@ -11,28 +11,31 @@ apply plugin: 'maven'
 apply plugin: 'jacoco'
 // for compliance with higher Java versions
 jacoco {
-		toolVersion = "0.8.5"
-	}
+  toolVersion = "0.8.5"
+}
 
 group 'APOLLO-EE-CORE'
 version '1.0-SNAPSHOT'
 
 
 repositories {
-	mavenCentral()
+  mavenCentral()
 }
 
 dependencies {
-	// gson to define the format of the exchanged messages
-	implementation 'com.google.code.gson:gson:2.8.6'
-	
-	// test dependencies	
-	testCompile group: 'junit', 		name: 'junit', 					version: '4.+'
-	testCompile group: 'org.mockito',     name: 'mockito-core',     version: '3.4.4'
+  // gson to define the format of the exchanged messages
+  implementation 'com.google.code.gson:gson:2.8.6'
+
+  // vertx
+  implementation 'io.vertx:vertx-core:4.1.0'
+
+  // test dependencies
+  testCompile group: 'junit', 		name: 'junit', 					version: '4.+'
+  testCompile group: 'org.mockito',     name: 'mockito-core',     version: '3.4.4'
 }
 
 jacocoTestReport {
-	reports {
-		xml.enabled true
-	}
+  reports {
+    xml.enabled true
+  }
 }
