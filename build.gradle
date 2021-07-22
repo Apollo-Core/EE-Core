@@ -30,7 +30,8 @@ dependencies {
   implementation 'io.vertx:vertx-core:4.1.0'
 
   // test dependencies
-  testCompile group: 'junit', 		name: 'junit', 					version: '4.+'
+  testImplementation(platform('org.junit:junit-bom:5.7.2'))
+  testImplementation('org.junit.jupiter:junit-jupiter')
   testCompile group: 'org.mockito',     name: 'mockito-core',     version: '3.4.4'
 }
 
@@ -38,4 +39,8 @@ jacocoTestReport {
   reports {
     xml.enabled true
   }
+}
+
+test {
+  useJUnitPlatform()
 }

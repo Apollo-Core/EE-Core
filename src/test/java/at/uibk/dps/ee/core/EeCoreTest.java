@@ -1,8 +1,7 @@
 package at.uibk.dps.ee.core;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Test;
 import com.google.gson.JsonObject;
 import at.uibk.dps.ee.core.function.EnactmentStateListener;
 import io.vertx.core.Future;
@@ -10,6 +9,7 @@ import static org.mockito.Mockito.mock;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.when;
 
 import static org.mockito.Mockito.verify;

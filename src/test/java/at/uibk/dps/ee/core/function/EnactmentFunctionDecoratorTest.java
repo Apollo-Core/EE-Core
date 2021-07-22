@@ -1,12 +1,12 @@
 package at.uibk.dps.ee.core.function;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import com.google.gson.JsonObject;
 import io.vertx.core.Future;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import java.util.Set;
+import org.junit.jupiter.api.Test;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashSet;
 import static org.mockito.Mockito.spy;
