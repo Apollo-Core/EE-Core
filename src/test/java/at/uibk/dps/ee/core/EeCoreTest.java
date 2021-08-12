@@ -34,9 +34,9 @@ public class EeCoreTest {
 
     when(functionMock.processInput(mockInput)).thenReturn(Future.succeededFuture(mockOutput));
     EeCore tested = new EeCore(outputDataHandler, enactmentListeners, locRes, functionMock);
-    JsonObject result = tested.enactWorkflow(mockInput).result();
-    assertEquals(mockOutput, result);
-    verify(outputDataHandler).handleOutputData(mockOutput);
+    Future<JsonObject> resultFuture = tested.enactWorkflow(mockInput);
+    assertEquals(mockOutput, resultFuture.result());
+    verify(outputDataHandler).handleOutputData(resultFuture);
     verify(mockListener).enactmentStarted();
     verify(mockListener).enactmentTerminated();
 

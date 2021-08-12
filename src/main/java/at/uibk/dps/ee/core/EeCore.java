@@ -54,8 +54,7 @@ public class EeCore extends AbstractVerticle {
     }
     final Future<JsonObject> wfCompletion = coreFunction.processInput(inputData);
     wfCompletion.onComplete(asyncJson -> {
-      final JsonObject result = asyncJson.result();
-      outputDataHandler.handleOutputData(result);
+      outputDataHandler.handleOutputData(wfCompletion);
       // better use event bus for this
       for (final EnactmentStateListener stateListener : stateListeners) {
         stateListener.enactmentTerminated();
