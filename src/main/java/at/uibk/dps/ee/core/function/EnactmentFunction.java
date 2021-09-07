@@ -33,6 +33,13 @@ public interface EnactmentFunction {
    * @return the type ID of the function.
    */
   String getTypeId();
+  
+  /**
+   * Returns the ID of the node that is associated with the given function.
+   * 
+   * @return the ID of the node that is associated with the given function
+   */
+  String getFunctionId();
 
   /**
    * Returns a string indicating the enactment mode (e.g., local enactment or

@@ -48,6 +48,11 @@ public abstract class EnactmentFunctionDecorator implements EnactmentFunction {
   public String getTypeId() {
     return decoratedFunction.getTypeId();
   }
+  
+  @Override
+  public String getFunctionId() {
+    return decoratedFunction.getFunctionId();
+  }
 
   @Override
   public Set<SimpleEntry<String, String>> getAdditionalAttributes() {
