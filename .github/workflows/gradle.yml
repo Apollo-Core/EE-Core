@@ -14,7 +14,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build + integration test:
+  build-unittest-integrationtest:
 
     runs-on: ubuntu-latest
 
