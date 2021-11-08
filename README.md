@@ -5,7 +5,19 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 # EE-Core
-Project defining the core interfaces of the Apollo platform which are used for the communication among the other projects.
+Repository defining the core interfaces of the Apollo platform which are used for the communication among the other projects.
+
+## Relevance
+
+### Repository relevant if
+
++ You want to get a high-level overview of the functionality of the Apollo platform (in this case you may also want to check out [EE-Guice](https://github.com/Apollo-Core/EE-Guice))
++ You are interested in the interfaces used across the repositories of the Apollo-Core organization
+
+### Repository less relevant if
+
++ You want to use Apollo for application orchestration ([EE-Demo](https://github.com/Apollo-Core/EE-Demo) is probably a good place to start; the readme of [EE-IO](https://github.com/Apollo-Core/EE-Demo) contains a description of the format of the input files required by Apollo)
++ You want implement a particular type of component, such as a scheduler (see [SC-Core](https://github.com/Apollo-Core/SC-Core)) or a new way of enacting functions
 
 ## Relations to other parts of Apollo-Core
 
@@ -23,6 +35,3 @@ Project defining the core interfaces of the Apollo platform which are used for t
   + EE-Demo
   + EE-Deploy
 
-### Relevant For
-  + Definition of the core functionality of the Apollo Platform
-  + Definition of the main interfaces used across the other projects
