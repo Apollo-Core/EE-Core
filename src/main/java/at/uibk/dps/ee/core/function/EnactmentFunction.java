@@ -24,46 +24,4 @@ public interface EnactmentFunction {
    * @throws StopException exception thrown if errors occur during the processing
    */
   Future<JsonObject> processInput(JsonObject input);
-
-  /**
-   * Returns the type ID of the function. The type ID describes the purpose of the
-   * function within a workflow, i.e., the way in which it processes input data
-   * (Example type ID: Addition).
-   * 
-   * @return the type ID of the function.
-   */
-  String getTypeId();
-  
-  /**
-   * Returns the ID of the node that is associated with the given function.
-   * 
-   * @return the ID of the node that is associated with the given function
-   */
-  String getFunctionId();
-
-  /**
-   * Returns a string indicating the enactment mode (e.g., local enactment or
-   * enactment as a serverless function).
-   * 
-   * @return a string indicating the enactment mode of the function
-   */
-  String getEnactmentMode();
-
-  /**
-   * Returns a string uniquely identifying the code base used for the
-   * implementation of the function.
-   * 
-   * @return a string uniquely identifying the code base used for the
-   *         implementation of the function
-   */
-  String getImplementationId();
-
-  /**
-   * Generic interface for any additional attributes used to describe the
-   * function.
-   * 
-   * @return a set of string-string key value pairs describing additional function
-   *         attributes
-   */
-  Set<SimpleEntry<String, String>> getAdditionalAttributes();
 }

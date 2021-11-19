@@ -27,7 +27,7 @@ dependencies {
   implementation 'com.google.code.gson:gson:2.8.6'
 
   // vertx
-  implementation 'io.vertx:vertx-core:4.1.0'
+  implementation 'io.vertx:vertx-core:4.1.1'
 
   // test dependencies
   testImplementation(platform('org.junit:junit-bom:5.7.2'))

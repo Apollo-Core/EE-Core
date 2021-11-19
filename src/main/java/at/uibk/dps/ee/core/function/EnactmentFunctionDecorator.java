@@ -1,7 +1,5 @@
 package at.uibk.dps.ee.core.function;
 
-import java.util.Set;
-import java.util.AbstractMap.SimpleEntry;
 import com.google.gson.JsonObject;
 import io.vertx.core.Future;
 
@@ -32,31 +30,6 @@ public abstract class EnactmentFunctionDecorator implements EnactmentFunction {
     }).compose(resultJson -> {
       return postprocess(resultJson);
     });
-  }
-
-  @Override
-  public String getEnactmentMode() {
-    return decoratedFunction.getEnactmentMode();
-  }
-
-  @Override
-  public String getImplementationId() {
-    return decoratedFunction.getImplementationId();
-  }
-
-  @Override
-  public String getTypeId() {
-    return decoratedFunction.getTypeId();
-  }
-  
-  @Override
-  public String getFunctionId() {
-    return decoratedFunction.getFunctionId();
-  }
-
-  @Override
-  public Set<SimpleEntry<String, String>> getAdditionalAttributes() {
-    return decoratedFunction.getAdditionalAttributes();
   }
 
   /**
