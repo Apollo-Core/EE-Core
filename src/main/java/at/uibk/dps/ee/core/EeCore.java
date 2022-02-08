@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import at.uibk.dps.ee.core.function.EnactmentStateListener;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 
 /**
  * Core class performing the enactment.
@@ -19,6 +20,7 @@ public class EeCore extends AbstractVerticle {
 
   protected final Set<EnactmentStateListener> stateListeners;
   protected final Set<LocalResources> localResources;
+  protected final Initializer initializer;
   protected final CoreFunction coreFunction;
 
   /**
@@ -33,12 +35,13 @@ public class EeCore extends AbstractVerticle {
    */
   public EeCore(final OutputDataHandler outputDataHandler,
       final Set<EnactmentStateListener> stateListeners, final Set<LocalResources> localResources,
-      final CoreFunction coreFunction) {
+      final CoreFunction coreFunction, final Initializer initializer) {
     this.outputDataHandler = outputDataHandler;
     this.stateListeners = stateListeners;
     this.localResources = localResources;
     this.coreFunction = coreFunction;
-    localResources.forEach(locRes -> locRes.init());
+    this.initializer = initializer;
+    localResources.forEach(LocalResources::init);
   }
 
   /**
@@ -49,6 +52,18 @@ public class EeCore extends AbstractVerticle {
    * @param inputData the {@link JsonObject} containing input data
    */
   public Future<JsonObject> enactWorkflow(final JsonObject inputData) {
+    Promise<JsonObject> result = Promise.promise();
+    initializer.initialize().onComplete(asyncRes -> {
+      if (asyncRes.succeeded()) {
+        executeWorkflow(inputData, result);
+      } else {
+        result.fail(new IllegalStateException("Initialization failed."));
+      }
+    });
+    return result.future();
+  }
+
+  protected void executeWorkflow(final JsonObject inputData, Promise<JsonObject> resultPromise) {
     for (final EnactmentStateListener stateListener : stateListeners) {
       stateListener.enactmentStarted();
     }
@@ -59,8 +74,9 @@ public class EeCore extends AbstractVerticle {
       for (final EnactmentStateListener stateListener : stateListeners) {
         stateListener.enactmentTerminated();
       }
+      JsonObject executionResult = asyncJson.result();
+      resultPromise.complete(executionResult);
     });
-    return wfCompletion;
   }
 
   /**

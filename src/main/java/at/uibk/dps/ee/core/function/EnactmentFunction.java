@@ -1,9 +1,6 @@
 package at.uibk.dps.ee.core.function;
 
-import java.util.Set;
 import com.google.gson.JsonObject;
-
-import java.util.AbstractMap.SimpleEntry;
 
 import io.vertx.core.Future;
 

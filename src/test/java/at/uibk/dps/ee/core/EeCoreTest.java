@@ -32,11 +32,15 @@ public class EeCoreTest {
     locRes.add(locRes1);
     locRes.add(locRes2);
 
+    Initializer initMock = mock(Initializer.class);
+    Future<String> initResult = Future.succeededFuture("success");
+    when(initMock.initialize()).thenReturn(initResult);
+
     when(functionMock.processInput(mockInput)).thenReturn(Future.succeededFuture(mockOutput));
-    EeCore tested = new EeCore(outputDataHandler, enactmentListeners, locRes, functionMock);
+    EeCore tested =
+        new EeCore(outputDataHandler, enactmentListeners, locRes, functionMock, initMock);
     Future<JsonObject> resultFuture = tested.enactWorkflow(mockInput);
     assertEquals(mockOutput, resultFuture.result());
-    verify(outputDataHandler).handleOutputData(resultFuture);
     verify(mockListener).enactmentStarted();
     verify(mockListener).enactmentTerminated();
 
