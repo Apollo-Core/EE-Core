@@ -52,7 +52,7 @@ public class EeCore extends AbstractVerticle {
    * @param inputData the {@link JsonObject} containing input data
    */
   public Future<JsonObject> enactWorkflow(final JsonObject inputData) {
-    Promise<JsonObject> result = Promise.promise();
+    final Promise<JsonObject> result = Promise.promise();
     initializer.initialize().onComplete(asyncRes -> {
       if (asyncRes.succeeded()) {
         executeWorkflow(inputData, result);
@@ -63,7 +63,15 @@ public class EeCore extends AbstractVerticle {
     return result.future();
   }
 
-  protected void executeWorkflow(final JsonObject inputData, Promise<JsonObject> resultPromise) {
+  /**
+   * Executes the workflow asyncronously with the given input data. The provided
+   * promise is completed as soon as the workflow execution is finished.
+   * 
+   * @param inputData the input data
+   * @param resultPromise the promise for the wf execution result
+   */
+  protected void executeWorkflow(final JsonObject inputData,
+      final Promise<JsonObject> resultPromise) {
     for (final EnactmentStateListener stateListener : stateListeners) {
       stateListener.enactmentStarted();
     }
@@ -74,8 +82,7 @@ public class EeCore extends AbstractVerticle {
       for (final EnactmentStateListener stateListener : stateListeners) {
         stateListener.enactmentTerminated();
       }
-      JsonObject executionResult = asyncJson.result();
-      resultPromise.complete(executionResult);
+      resultPromise.complete(asyncJson.result());
     });
   }
 
