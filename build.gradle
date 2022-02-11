@@ -35,6 +35,23 @@ dependencies {
   testImplementation group: 'org.mockito',     name: 'mockito-core',     version: '3.4.4'
 }
 
+java {
+  withSourcesJar()
+}
+
+publishing {
+  publications {
+      maven(MavenPublication) {
+      from components.java
+      }
+  }
+}
+
+wrapper {
+  gradleVersion = "6.8.3"
+  distributionType = Wrapper.DistributionType.ALL
+}
+
 jacocoTestReport {
   reports {
     xml.enabled true
