@@ -1,7 +1,5 @@
 package at.uibk.dps.ee.core;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.google.gson.JsonObject;
 import at.uibk.dps.ee.core.function.EnactmentStateListener;
 import io.vertx.core.Future;
@@ -17,6 +15,40 @@ import static org.mockito.Mockito.verify;
 public class EeCoreTest {
 
   @Test
+  public void testEnactException() {
+    OutputDataHandler outputDataHandler = mock(OutputDataHandler.class);
+    Set<EnactmentStateListener> enactmentListeners = new HashSet<>();
+    CoreFunction functionMock = mock(CoreFunction.class);
+    JsonObject mockInput = new JsonObject();
+    EnactmentStateListener mockListener = mock(EnactmentStateListener.class);
+    enactmentListeners.add(mockListener);
+
+    Initializer initMock = mock(Initializer.class);
+    Future<String> initResult = Future.succeededFuture("success");
+    when(initMock.initialize()).thenReturn(initResult);
+
+    Terminator termMock = mock(Terminator.class);
+    Future<String> termResult = Future.succeededFuture("success");
+    when(termMock.terminate()).thenReturn(termResult);
+    
+    FailureHandler fHandler = mock(FailureHandler.class);
+
+    Throwable expectedExc = new IllegalArgumentException("exception");
+    
+    when(functionMock.processInput(mockInput))
+        .thenReturn(Future.failedFuture(expectedExc));
+    EeCore tested =
+        new EeCore(outputDataHandler, enactmentListeners, functionMock, initMock, termMock, fHandler);
+    tested.enactWorkflow(mockInput);
+
+    verify(mockListener).enactmentStarted();
+    verify(mockListener).enactmentTerminated();
+    verify(fHandler).handleFailure(expectedExc);
+    verify(initMock).initialize();
+    verify(termMock).terminate();
+  }
+
+  @Test
   public void testEnactCorrect() {
     OutputDataHandler outputDataHandler = mock(OutputDataHandler.class);
     Set<EnactmentStateListener> enactmentListeners = new HashSet<>();
@@ -26,28 +58,26 @@ public class EeCoreTest {
     enactmentListeners.add(mockListener);
     JsonObject mockOutput = new JsonObject();
 
-    LocalResources locRes1 = mock(LocalResources.class);
-    LocalResources locRes2 = mock(LocalResources.class);
-    Set<LocalResources> locRes = new HashSet<>();
-    locRes.add(locRes1);
-    locRes.add(locRes2);
 
     Initializer initMock = mock(Initializer.class);
     Future<String> initResult = Future.succeededFuture("success");
     when(initMock.initialize()).thenReturn(initResult);
 
+    Terminator termMock = mock(Terminator.class);
+    Future<String> termResult = Future.succeededFuture("success");
+    when(termMock.terminate()).thenReturn(termResult);
+
+    FailureHandler fHandler = mock(FailureHandler.class);
+
     when(functionMock.processInput(mockInput)).thenReturn(Future.succeededFuture(mockOutput));
-    EeCore tested =
-        new EeCore(outputDataHandler, enactmentListeners, locRes, functionMock, initMock);
-    Future<JsonObject> resultFuture = tested.enactWorkflow(mockInput);
-    assertEquals(mockOutput, resultFuture.result());
+    EeCore tested = new EeCore(outputDataHandler, enactmentListeners, functionMock, initMock,
+        termMock, fHandler);
+    tested.enactWorkflow(mockInput);
+
     verify(mockListener).enactmentStarted();
     verify(mockListener).enactmentTerminated();
-
-    tested.close();
-    verify(locRes1).init();
-    verify(locRes1).close();
-    verify(locRes2).init();
-    verify(locRes2).close();
+    verify(outputDataHandler).handleOutputData(mockOutput);
+    verify(initMock).initialize();
+    verify(termMock).terminate();
   }
 }
