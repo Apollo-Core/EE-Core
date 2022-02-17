@@ -53,12 +53,22 @@ public class EeCore {
    * 
    * @param inputData the {@link JsonObject} containing input data
    */
-  public Future<String> enactWorkflow(final JsonObject inputData) {
-    return initializer.initialize().compose(initRes -> {
-      return executeWorkflow(inputData);
-    }).compose(enactRes -> {
-      return terminator.terminate();
+  public Future<JsonObject> enactWorkflow(final JsonObject inputData) {
+    Promise<JsonObject> resultPromise = Promise.promise();
+    initializer.initialize().onComplete(initRes -> {
+      executeWorkflow(inputData).onComplete(asyncJsonRes -> {
+        if (asyncJsonRes.succeeded()) {
+          terminator.terminate().onComplete(termRes -> {
+            resultPromise.complete(asyncJsonRes.result());
+          });
+        } else {
+          terminator.terminate().onComplete(termRes -> {
+            resultPromise.fail("Enactment failed");
+          });
+        }
+      });
     });
+    return resultPromise.future();
   }
 
   /**
@@ -70,8 +80,8 @@ public class EeCore {
    * @return a future with the Json result, which is completed as soon as the
    *         workflow execution is finished
    */
-  protected Future<String> executeWorkflow(final JsonObject inputData) {
-    Promise<String> resultPromise = Promise.promise();
+  protected Future<JsonObject> executeWorkflow(final JsonObject inputData) {
+    Promise<JsonObject> resultPromise = Promise.promise();
     for (final EnactmentStateListener stateListener : stateListeners) {
       stateListener.enactmentStarted();
     }
@@ -79,10 +89,10 @@ public class EeCore {
     wfCompletion.onComplete(asyncJson -> {
       if (asyncJson.succeeded()) {
         outputDataHandler.handleOutputData(asyncJson.result());
-        resultPromise.complete("Enactment Finished");
+        resultPromise.complete(asyncJson.result());
       } else {
         failureHandler.handleFailure(asyncJson.cause());
-        resultPromise.complete("Enactment Failed");
+        resultPromise.fail("Enactment Failed");
       }
       // better use event bus for this
       for (final EnactmentStateListener stateListener : stateListeners) {
